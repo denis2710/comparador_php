@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Comparador</title>
+
+    <link rel="stylesheet" href="./css/estilo.css">
+
+    <script type="text/javascript" src="./scripts/jquery.min.js">
+    </script>
+    <script type="text/javascript" src="./scripts/comparador.js">
+    </script>
+
+    <script>
+        $(document).ready(function(){ 
+            $.ajax({
+                url: "http://localhost/comparador/index.php",
+                context: document.body
+            }).done(function(dados) {
+
+                console.log(dados);
+
+                $.each(dados.antigo, function(nro, conteudo){
+                    $("#linhas1").append("<div class='num'>" + conteudo.nro_linha + "</div>" );
+                    if(conteudo.tipo_linha == 'vazio'){
+                        var classe = 'l la d3'
+                    } else if(conteudo.tipo_linha == "modificada"){ 
+                        var classe = "l lc d2"
+                    } else if(conteudo.tipo_linha == "deletada"){ 
+                        var classe = "l lc d2"
+                    }else { // normal
+                        var classe = 'l li'
+                    }
+                    $("#conteudo1").append('<div class="' + classe +' ">' + conteudo.conteudo + ' </div>');
+                });
+
+                $.each(dados.novo, function(nro, conteudo){
+                    $("#linhas2").append("<div class='num'>" + conteudo.nro_linha + "</div>" );
+                    if(conteudo.tipo_linha == 'vazio'){
+                        var classe = 'l la d3'
+                    } else if(conteudo.tipo_linha == "modificada"){ 
+                        var classe = "l lc d2"
+                    }else if(conteudo.tipo_linha == "adicionada"){ 
+                        var classe = "l lc d2"
+                    } else { // normal
+                        var classe = 'l li'
+                    }
+                    $("#conteudo2").append('<div class="' + classe +' ">' + conteudo.conteudo + ' </div>');
+                });
+                
+                var diferencas = ""; 
+                $.each(dados.resumo, function(nro, conteudo){
+                    diferencas += "<option value=" + conteudo.nroDif + "> Diferença " + conteudo.nroDif + ": " + conteudo.descricao + "</option>" ;
+                });
+                $("#diferencaAtual").html(diferencas);
+
+            });
+        })
+
+       
+    </script>
+
+
+<body>
+        <div id="container" style="width: 1257px;">
+            <!-- NAVEGACAO INICIO -->
+                <table id="navigation">
+                    <tbody><tr>
+                        <td class="button"><input type="button" id="btnFirst" value="&lt;&lt;" title="Primeira Diferença"></td>
+                        <td class="button"><input type="button" id="btnPrevious" value="&lt;" title="Diferença Anteriror"></td>
+                        <td class="button"><input type="button" id="btnNext" value="&gt;" title="Proxima Diferença"></td>
+                        <td class="button"><input type="button" id="btnLast" value="&gt;&gt;" title="Ultima Diferença"></td>
+                        <td>
+                            <select id="diferencaAtual" size="1"></select>
+                        </td>
+                    </tr>
+                </tbody></table>
+            <!-- NAVEGACAO FIM -->
+        
+            <div class="text comparison">
+                <div class="pane">
+                    <div id="title1" class="title" style="width: 618.5px; height: 14px;" title="Arquivo 1 em produção">
+                        <b>Arquivo Original [Em Produção]</b>
+                    </div>
+
+                    <div id="file1" class="file" style="width: 622.5px; height: 424px;">
+                        <table class="panes">
+                            <tbody><tr>
+                                <td class="diffBar" style="">
+                                    <div class="diffs"><div class="diff" title="Diff 1: Add 1 line (3, second file) after line 2 (first file)" style="top: 26px; height: 12px;"></div><div class="diff active" title="Diff 2: Change 1 line (12, first file) to 1 line (13, second file)" style="top: 156px; height: 12px;"></div><div class="diff" title="Diff 3: Add 23 lines (24 - 46, second file) after line 21 (first file)" style="top: 299px; height: 298px;"></div><div class="diff" title="Diff 4: Change 1 line (25, first file) to 1 line (51, second file)" style="top: 650px; height: 12px;"></div><div class="diff" title="Diff 5: Change 1 line (33, first file) to 1 line (59, second file)" style="top: 754px; height: 12px;"></div><div class="diff" title="Diff 6: Delete 1 line (43, first file) after line 68 (second file)" style="top: 884px; height: 12px;"></div><div class="diff" title="Diff 7: Delete 6 lines (58 - 63, first file) after line 77 (second file)" style="top: 1079px; height: 77px;"></div></div>
+                                </td>
+                                <td class="nums" id="linhas1">
+                                    <!-- aqui vai os numeros das linhas  -->
+                                </td>
+                                <td class="content" id="conteudo1">
+                                    <!-- aqui vai os conteudos das linhas  -->
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </div>
+                </div>
+                <div class="pane">
+                    <div id="title2" class="title" style="width: 618.5px; height: 14px;" title="[Clip 2]"><b>Arquivo Modificado [Seu Envio]</b></div>
+                    <div id="file2" class="file" style="width: 622.5px; height: 424px;">
+                        <table class="panes">
+                            <tbody><tr>
+                                <td class="diffBar" style="">
+                                    <div class="diffs"><div class="diff" title="Diff 1: Add 1 line (3, second file) after line 2 (first file)" style="top: 26px; height: 12px;"></div><div class="diff active" title="Diff 2: Change 1 line (12, first file) to 1 line (13, second file)" style="top: 156px; height: 12px;"></div><div class="diff" title="Diff 3: Add 23 lines (24 - 46, second file) after line 21 (first file)" style="top: 299px; height: 298px;"></div><div class="diff" title="Diff 4: Change 1 line (25, first file) to 1 line (51, second file)" style="top: 650px; height: 12px;"></div><div class="diff" title="Diff 5: Change 1 line (33, first file) to 1 line (59, second file)" style="top: 754px; height: 12px;"></div><div class="diff" title="Diff 6: Delete 1 line (43, first file) after line 68 (second file)" style="top: 884px; height: 12px;"></div><div class="diff" title="Diff 7: Delete 6 lines (58 - 63, first file) after line 77 (second file)" style="top: 1079px; height: 77px;"></div></div>
+                                </td>
+                                <td class="nums"  id="linhas2" >
+                                </td>
+                                <td class="content" id="conteudo2">
+                                </td>
+                            </tr>
+                        </tbody></table>
+                    </div>
+                </div>
+            </div>
+        
+            <div id="inspector" style="">
+                <div class="left line">
+                    <table class="panes">
+                        <tbody><tr>
+                            <td class="diffBar" style=""></td>
+                            <td class="nums">
+                                <div class="num" style="width: 23px;"> 16 </div>
+                            </td>
+                            <td class="content">
+                                <div id="inspectorLeftContent" class="l li"><span class="si">              &lt;</span><span class="s1-86">/</span><span class="s1-90">ol</span><span class="si">&gt;</span></div>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                </div>
+                <div class="right line">
+                    <table class="panes">
+                        <tbody><tr>
+                            <td class="diffBar" style=""></td>
+                            <td class="nums">
+                                <div class="num" style="width: 23px;"> 17 </div>
+                            </td>
+                            <td class="content">
+                                <div id="inspectorRightContent" class="l li"><span class="si">              &lt;</span><span class="s2-86">/</span><span class="s2-90">ol</span><span class="si">&gt;</span></div>
+                            </td>
+                        </tr>
+                    </tbody></table>
+                </div>
+            </div>
+        
+            <div id="legend">
+                <div id="numDiffs"><b>7 Diferenças</b>: 34 linhas, 4 linhas diferentes e 3 linhas modificadas</div>
+                <div id="colors"><div class="sa" title="Added lines: 24, inline additions in changed lines: 1">Added(24,1)</div>
+                <div class="sd" title="Deleted lines: 7, inline deletions in changed lines: 0">Deleted(7,0)</div>
+                <div class="sc" title="Changed lines: 3">Changed(3)</div><div class="sc2" title="Inline changes in changed lines: 3">Changed in changed(3)</div>
+                <div class="sig" title="Ignored lines and line parts">Ignored</div></div>
+            </div>
+        
+            <div id="generated_by">
+                <!-- Generated on October 17, 2017, 5:53 AM by <a href="http://www.prestosoft.com/edp_examdiffpro.asp?ref=diffreport" target="_blank">ExamDiff Pro</a> 9.0.1.2. -->
+            </div>
+        </div>
+        
+    </body>
+        </html>
